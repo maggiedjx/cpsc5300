@@ -1,5 +1,5 @@
 /**
- * relation manaager's SQL shell
+ * @file sql5300.cpp - main entry for the relation manaager's SQL shell
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +8,8 @@
 #include "db_cxx.h"
 #include "SQLParser.h"
 #include "sqlhelper.h"
+#include "heap_storage.h"
+#include "storage_engine.h"
 using namespace std;
 using namespace hsql;
 
@@ -44,7 +46,7 @@ string expressionToString(const Expr *expr) {
 		ret += operatorExpressionToString(expr);
 		break;
 	default:
-		ret += "?";  // for unknown expression types
+		ret += "???";  // in case there are exprssion types we don't know about here
 		break;
 	}
 	if (expr->alias != NULL)
@@ -170,7 +172,7 @@ string columnDefinitionToString(const ColumnDefinition *col) {
 /**
  * Execute an SQL select statement (but for now, just spit back the SQL)
  * @param stmt  Hyrise AST for the select statement
- * @returns     a string of the SQL statment
+ * @returns     a string (for now) of the SQL statment
  */
 string executeSelect(const SelectStatement *stmt) {
 	string ret("SELECT ");
@@ -190,7 +192,7 @@ string executeSelect(const SelectStatement *stmt) {
 /**
  * Execute an SQL insert statement (but for now, just spit back the SQL)
  * @param stmt  Hyrise AST for the insert statement
- * @returns     a string of the SQL statment
+ * @returns     a string (for now) of the SQL statment
  */
 string executeInsert(const InsertStatement *stmt) {
 	return "INSERT ...";
@@ -199,7 +201,7 @@ string executeInsert(const InsertStatement *stmt) {
 /**
  * Execute an SQL create statement (but for now, just spit back the SQL)
  * @param stmt  Hyrise AST for the create statement
- * @returns     a string of the SQL statment
+ * @returns     a string (for now) of the SQL statment
  */
 string executeCreate(const CreateStatement *stmt) {
 	string ret("CREATE TABLE ");
@@ -251,6 +253,7 @@ int main(int argc, char **argv) {
 	char *envHome = argv[1];
 	cout << "(sql5300: running with database environment at " << envHome << ")" << endl;
 	DbEnv env(0U);
+	
 	env.set_message_stream(&cout);
 	env.set_error_stream(&cerr);
 	try {
@@ -266,9 +269,12 @@ int main(int argc, char **argv) {
 		string query;
 		getline(cin, query);
 		if (query.length() == 0)
-			continue;  // blank line - skip
-		if (query == "exit" || query == "q" || query == "quit")
-			break;  // exit shell
+			continue;  // blank line -- just skip
+		if (query == "quit" || query == "q")
+			break;  // only way to get out
+		
+		if (query == "test")
+			cout << test_heap_storage() << endl;
 
 		// use the Hyrise sql parser to get us our AST
 		SQLParserResult* result = SQLParser::parseSQLString(query);
@@ -277,10 +283,11 @@ int main(int argc, char **argv) {
 			continue;
 		}
 
-		// execute statement
+		// execute the statement
 		for (uint i = 0; i < result->size(); ++i) {
 			cout << execute(result->getStatement(i)) << endl;
 		}
 	}
 	return EXIT_SUCCESS;
 }
+

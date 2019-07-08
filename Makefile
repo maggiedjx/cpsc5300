@@ -1,11 +1,11 @@
-# Makefile 
+# configs
 CCFLAGS     = -std=c++11 -std=c++0x -Wall -Wno-c++11-compat -DHAVE_CXX_STDHEADERS -D_GNU_SOURCE -D_REENTRANT -O3 -c
 COURSE      = /usr/local/db6
 INCLUDE_DIR = $(COURSE)/include
 LIB_DIR     = $(COURSE)/lib
 
-# below is a list of all the compiled object files needed to build the shell executable
-OBJS       = shell.o
+# following is a list of all the compiled object files needed to build the sql5300 executable
+OBJS       = heap_storage.o sql5300.o
 
 # General rule for compilation
 %.o: %.cpp
@@ -19,4 +19,4 @@ sql5300: $(OBJS)
 # Rule for removing all non-source files (so they can get rebuilt from scratch)
 # Note that since it is not the first target, you have to invoke it explicitly: $ make clean
 clean:
-	rm -f shell *.o
+	rm -f sql5300 *.o
