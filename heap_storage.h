@@ -24,6 +24,7 @@
             etc.
  *
  */
+
 class SlottedPage : public DbBlock {
 public:
 	SlottedPage(Dbt &block, BlockID block_id, bool is_new=false);

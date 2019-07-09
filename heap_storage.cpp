@@ -8,7 +8,7 @@
 #include "sqlhelper.h"
 
 #define DB_BLOCK_SZ 256
-
+DbEnv* _DB_ENV;
 typedef u_int16_t u16;
 
 // SlottedPage

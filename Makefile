@@ -5,7 +5,7 @@ INCLUDE_DIR = $(COURSE)/include
 LIB_DIR     = $(COURSE)/lib
 
 # following is a list of all the compiled object files needed to build the sql5300 executable
-OBJS       = heap_storage.o sql5300.o
+OBJS       = heap_storage.o sql5300.o 
 
 # General rule for compilation
 %.o: %.cpp
@@ -14,7 +14,7 @@ OBJS       = heap_storage.o sql5300.o
 # Rule for linking to create the executable
 # Note that this is the default target since it is the first non-generic one in the Makefile: $ make
 sql5300: $(OBJS)
-	g++ -L$(LIB_DIR) -o $@ $< -ldb_cxx -lsqlparser
+	g++ -L$(LIB_DIR) -o $@ $^ -ldb_cxx -lsqlparser
 
 # Rule for removing all non-source files (so they can get rebuilt from scratch)
 # Note that since it is not the first target, you have to invoke it explicitly: $ make clean

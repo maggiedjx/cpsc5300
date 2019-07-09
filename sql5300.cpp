@@ -8,8 +8,8 @@
 #include "db_cxx.h"
 #include "SQLParser.h"
 #include "sqlhelper.h"
-#include "heap_storage.h"
 #include "storage_engine.h"
+#include "heap_storage.h"
 using namespace std;
 using namespace hsql;
 
@@ -252,12 +252,12 @@ int main(int argc, char **argv) {
 	}
 	char *envHome = argv[1];
 	cout << "(sql5300: running with database environment at " << envHome << ")" << endl;
-	DbEnv env(0U);
+	_DB_ENV = new DbEnv(0U);
 	
-	env.set_message_stream(&cout);
-	env.set_error_stream(&cerr);
+	_DB_ENV->set_message_stream(&cout);
+	_DB_ENV->set_error_stream(&cerr);
 	try {
-		env.open(envHome, DB_CREATE | DB_INIT_MPOOL, 0);
+		_DB_ENV->open(envHome, DB_CREATE | DB_INIT_MPOOL, 0);
 	} catch (DbException exc) {
 		cerr << "(sql5300: " << exc.what() << ")";
 		exit(1);
